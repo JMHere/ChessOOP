@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ListIterator;
+import java.util.Random;
 
 /**
  * @author Ashish Kedia and Adarsh Mohata
@@ -69,8 +70,13 @@ public class Main extends JFrame implements MouseListener
 	private String[] WNames={},BNames={};
 	private JSlider timeSlider;
 	private BufferedImage image;
-	private Button start,wselect,bselect,WNewPlayer,BNewPlayer;
+	private Button start,wselect,bselect,WNewPlayer,BNewPlayer,random;
 	public static int timeRemaining=60;
+	public ArrayList<Integer> numbers = new ArrayList<Integer>();
+	public ArrayList<String> pieces = new ArrayList<String>();
+	public boolean randomStart = false;
+	public ArrayList<Piece> piecesList = new ArrayList<Piece>();
+	public ArrayList<Piece> piecesListB = new ArrayList<Piece>();
 	public static void main(String[] args){
 	
 	//variable initialization
@@ -204,56 +210,189 @@ public class Main extends JFrame implements MouseListener
 		controlPanel.add(BlackPlayer);
 		
 		
-		//Defining all the Cells
-		boardState=new Cell[8][8];
-		for(int i=0;i<8;i++)
-			for(int j=0;j<8;j++)
-			{	
-				P=null;
-				if(i==0&&j==0)
-					P=br01;
-				else if(i==0&&j==7)
-					P=br02;
-				else if(i==7&&j==0)
-					P=wr01;
-				else if(i==7&&j==7)
-					P=wr02;
-				else if(i==0&&j==1)
-					P=bk01;
-				else if (i==0&&j==6)
-					P=bk02;
-				else if(i==7&&j==1)
-					P=wk01;
-				else if (i==7&&j==6)
-					P=wk02;
-				else if(i==0&&j==2)
-					P=bb01;
-				else if (i==0&&j==5)
-					P=bb02;
-				else if(i==7&&j==2)
-					P=wb01;
-				else if(i==7&&j==5)
-					P=wb02;
-				else if(i==0&&j==3)
-					P=bk;
-				else if(i==0&&j==4)
-					P=bq;
-				else if(i==7&&j==3)
-					P=wk;
-				else if(i==7&&j==4)
-					P=wq;
-				else if(i==1)
-				P=bp[j];
-				else if(i==6)
-					P=wp[j];
-				cell=new Cell(i,j,P);
-				cell.addMouseListener(this);
-				board.add(cell);
-				boardState[i][j]=cell;
-			}
+//		//Defining all the Cells
+//		boardState=new Cell[8][8];
+//		for(int i=0;i<8;i++)
+//			for(int j=0;j<8;j++)
+//			{	
+//				P=null;
+//				if(i==0&&j==0)
+//					P=br01;
+//				else if(i==0&&j==7)
+//					P=br02;
+//				else if(i==7&&j==0)
+//					P=wr01;
+//				else if(i==7&&j==7)
+//					P=wr02;
+//				else if(i==0&&j==1)
+//					P=bk01;
+//				else if (i==0&&j==6)
+//					P=bk02;
+//				else if(i==7&&j==1)
+//					P=wk01;
+//				else if (i==7&&j==6)
+//					P=wk02;
+//				else if(i==0&&j==2)
+//					P=bb01;
+//				else if (i==0&&j==5)
+//					P=bb02;
+//				else if(i==7&&j==2)
+//					P=wb01;
+//				else if(i==7&&j==5)
+//					P=wb02;
+//				else if(i==0&&j==3)
+//					P=bk;
+//				else if(i==0&&j==4)
+//					P=bq;
+//				else if(i==7&&j==3)
+//					P=wk;
+//				else if(i==7&&j==4)
+//					P=wq;
+//				else if(i==1)
+//				P=bp[j];
+//				else if(i==6)
+//					P=wp[j];
+//				cell=new Cell(i,j,P);
+//				cell.addMouseListener(this);
+//				board.add(cell);
+//				boardState[i][j]=cell;
+//			}
 		showPlayer=new JPanel(new FlowLayout());  
 		showPlayer.add(timeSlider);
 		JLabel setTime=new JLabel("Set Timer(in mins):"); 
+		
+		
+		
+		// My Button
+		random=new Button("Random");
+		random.setBackground(Color.black);
+		random.setForeground(Color.white);
+		random.setPreferredSize(new Dimension(120, 40));
+				
+			random.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					piecesList = new ArrayList<Piece>();
+					randomStart = true;
+					System.out.println("Button Clicked");
+					boardState = null;
+					//board = null;
+					while(numbers.size() < 8) {
+						Random rand = new Random();
+						int randomNum = rand.nextInt(8);
+						System.out.println(randomNum);
+						String pieceName = "";
+						if(numbers.contains(randomNum)) {
+							System.out.println("It Contains this number:");
+						} else {
+							switch(randomNum) {
+							case 1:
+								pieceName = "Rook";
+								break;
+							case 2:
+								pieceName = "Knight";
+								break;
+							case 3:
+								pieceName = "Bishop";
+								break;
+							case 0:
+								pieceName = "King";
+								break;
+							case 4:
+								pieceName = "Queen";
+								break;
+							case 5:
+								pieceName = "Bishop2";
+								break;
+							case 6:
+								pieceName = "Knight2";
+								break;
+							case 7:
+								pieceName = "Rook2";
+							}
+							
+							
+							if (pieces.size() == 0 & pieceName == "King") {
+								continue;
+							} else if((pieces.contains("Rook") || pieces.contains("Rook2")) & !pieces.contains("King") & (pieceName == "Rook" || pieceName == "Rook2")){
+								continue;
+							} else {
+								numbers.add(randomNum);
+								pieces.add(pieceName);
+							}
+							
+						}
+						if(numbers.size() == 5 & !pieces.contains("King") & !pieces.contains("Rook") & !pieces.contains("Rook2")) {
+							System.out.println("Need To Add King and castle");
+						}
+						if(pieces.size() == 5 & (pieces.contains("Rook") || pieces.contains("Rook2")) & !pieces.contains("King")) {
+							numbers.add(0);
+							pieces.add("King");
+						}
+						
+						
+					}
+					
+					for(String piece : pieces) {
+						System.out.println(piece);
+						if (piece == "Rook") {
+							piecesList.add(new Rook("WR01","White_Rook.png",0));
+							piecesListB.add(new Rook("BR01","Black_Rook.png",1));
+						}
+						if (piece == "Rook2") {
+							piecesList.add(new Rook("WR02","White_Rook.png",0));
+							piecesListB.add(new Rook("BR02","Black_Rook.png",1));
+						}
+						if (piece == "Knight") {
+							piecesList.add(new Knight("WK01","White_Knight.png",0));
+							piecesListB.add(new Knight("BK01","Black_Knight.png",1));
+						}
+						if (piece == "Bishop") {
+							piecesList.add(new Bishop("WB01","White_Bishop.png",0));
+							piecesListB.add(new Bishop("BB01","Black_Bishop.png",1));
+						}
+						if (piece == "King") {
+							piecesList.add(new King("WK","White_King.png",0,7,3));
+							piecesListB.add(new King("BK","Black_King.png",1,0,3));
+						}
+						if (piece == "Queen") {
+							piecesList.add(new Queen("WQ","White_Queen.png",0));
+							piecesListB.add(new Queen("BQ","Black_Queen.png",1));
+						}
+						if (piece == "Bishop2") {
+							piecesList.add(new Bishop("WB02","White_Bishop.png",0));
+							piecesListB.add(new Bishop("BB02","Black_Bishop.png",1));
+						}
+						if (piece == "Knight2") {
+							piecesList.add(new Knight("WK02","White_Knight.png",0));
+							piecesListB.add(new Knight("BK02","Black_Knight.png",1));
+						}
+					}
+					
+//						wk01=new Knight("WK01","White_Knight.png",0);
+//						wk02=new Knight("WK02","White_Knight.png",0);
+//						bk01=new Knight("BK01","Black_Knight.png",1);
+//						bk02=new Knight("BK02","Black_Knight.png",1);
+//						wb01=new Bishop("WB01","White_Bishop.png",0);
+//						wb02=new Bishop("WB02","White_Bishop.png",0);
+//						bb01=new Bishop("BB01","Black_Bishop.png",1);
+//						bb02=new Bishop("BB02","Black_Bishop.png",1);
+//						wq=new Queen("WQ","White_Queen.png",0);
+//						bq=new Queen("BQ","Black_Queen.png",1);
+//						wk=new King("WK","White_King.png",0,7,3);
+//						bk=new King("BK","Black_King.png",1,0,3);
+					
+					System.out.println(numbers.toString());
+					System.out.println(pieces.toString());
+					System.out.println(piecesList.toString());
+					System.out.println(piecesList.get(0));
+					randomBoard();
+					
+				}
+				
+			});
+		
+		
+		
 		start=new Button("Start");
 		start.setBackground(Color.black);
 		start.setForeground(Color.white);
@@ -267,6 +406,8 @@ public class Main extends JFrame implements MouseListener
 	      time.add(setTime);
 	      time.add(showPlayer);
 	      displayTime.add(start);
+	      // Adding my button
+	      displayTime.add(random);
 	      time.add(displayTime);
 	      controlPanel.add(time);
 		board.setMinimumSize(new Dimension(800,700));
@@ -294,6 +435,157 @@ public class Main extends JFrame implements MouseListener
 	    content.add(split);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
+	
+	
+public void regularBuild() {
+		
+		Cell cell;
+		pieces.Piece P;
+		
+		if (randomStart == false) {
+			
+			//Defining all the Cells
+			boardState=new Cell[8][8];
+			for(int i=0;i<8;i++)
+				for(int j=0;j<8;j++)
+				{	
+					P=null;
+					if(i==0&&j==0)
+						P=br01;
+					else if(i==0&&j==7)
+						P=br02;
+					else if(i==7&&j==0)
+						P=wr01;
+					else if(i==7&&j==7)
+						P=wr02;
+					else if(i==0&&j==1)
+						P=bk01;
+					else if (i==0&&j==6)
+						P=bk02;
+					else if(i==7&&j==1)
+						P=wk01;
+					else if (i==7&&j==6)
+						P=wk02;
+					else if(i==0&&j==2)
+						P=bb01;
+					else if (i==0&&j==5)
+						P=bb02;
+					else if(i==7&&j==2)
+						P=wb01;
+					else if(i==7&&j==5)
+						P=wb02;
+					else if(i==0&&j==3)
+						P=bk;
+					else if(i==0&&j==4)
+						P=bq;
+					else if(i==7&&j==3)
+						P=wk;
+					else if(i==7&&j==4)
+						P=wq;
+					else if(i==1)
+					P=bp[j];
+					else if(i==6)
+						P=wp[j];
+					cell=new Cell(i,j,P);
+					cell.addMouseListener(this);
+					board.add(cell);
+					boardState[i][j]=cell;
+				}
+		}
+	}
+	
+	public void randomBoard() {
+		
+		Cell cell;
+		pieces.Piece P;
+		
+		System.out.println(piecesList.toString());
+		
+		if(White==null||Black==null)
+			{JOptionPane.showMessageDialog(controlPanel, "Fill in the details");
+			return;}
+		
+		if (randomStart == true) {
+			System.out.println("In random");
+			//Defining all the Cells
+			boardState=new Cell[8][8];
+			for(int i=0;i<8;i++)
+				for(int j=0;j<8;j++)
+				{	
+					P=null;
+					if(i==0&&j==0)
+						P=piecesListB.get(0);
+					else if(i==0&&j==7)
+						P=piecesListB.get(7);
+					else if(i==7&&j==0) // 0
+						P=piecesList.get(0);
+					else if(i==7&&j==7) // 7
+						P=piecesList.get(7);
+					else if(i==0&&j==1)
+						P=piecesListB.get(1);
+					else if (i==0&&j==6)
+						P=piecesListB.get(6);
+					else if(i==7&&j==1) // 1
+						P=piecesList.get(1);
+					else if (i==7&&j==6) // 6
+						P=piecesList.get(6);
+					else if(i==0&&j==2)
+						P=piecesListB.get(2);
+					else if (i==0&&j==5)
+						P=piecesListB.get(5);
+					else if(i==7&&j==2) // 2
+						P=piecesList.get(2);
+					else if(i==7&&j==5) // 5
+						P=piecesList.get(5);
+					else if(i==0&&j==3)
+						P=piecesListB.get(3);
+					else if(i==0&&j==4)
+						P=piecesListB.get(4);
+					else if(i==7&&j==3) // 3
+						P=piecesList.get(3);
+					else if(i==7&&j==4) // 4
+						P=piecesList.get(4);
+					else if(i==1)
+					P=bp[j];
+					else if(i==6)
+						P=wp[j];
+					cell=new Cell(i,j,P);
+					cell.addMouseListener(this);
+					board.add(cell);
+					boardState[i][j]=cell;
+				}
+		} 
+		
+		
+		White.updateGamesPlayed();
+		White.Update_Player();
+		Black.updateGamesPlayed();
+		Black.Update_Player();
+		WNewPlayer.disable();
+		BNewPlayer.disable();
+		wselect.disable();
+		bselect.disable();
+		split.remove(temp);
+		split.add(board);
+		showPlayer.remove(timeSlider);
+		mov=new JLabel("Move:");
+		mov.setFont(new Font("Comic Sans MS",Font.PLAIN,20));
+		mov.setForeground(Color.red);
+		showPlayer.add(mov);
+		CHNC=new JLabel(move);
+		CHNC.setFont(new Font("Comic Sans MS",Font.BOLD,20));
+		CHNC.setForeground(Color.blue);
+		showPlayer.add(CHNC);
+		displayTime.remove(start);
+		// Remove my button
+		displayTime.remove(random);
+		displayTime.add(label);
+		timer=new Time(label);
+		timer.start();
+	
+		}
+	
+	
 	
 	// A function to change the chance from White Player to Black Player or vice verse
 	// It is made public because it is to be accessed in the Time Class
@@ -638,6 +930,11 @@ public class Main extends JFrame implements MouseListener
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
+		
+		System.out.println(numbers.toString());
+		System.out.println(pieces.toString());
+		
+		regularBuild();
 		
 		if(White==null||Black==null)
 			{JOptionPane.showMessageDialog(controlPanel, "Fill in the details");
